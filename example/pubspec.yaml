@@ -1,0 +1,23 @@
+name: cross_platform_video_thumbnails_example
+description: Example app for the cross_platform_video_thumbnails package
+publish_to: 'none'
+
+version: 0.0.2+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cross_platform_video_thumbnails:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

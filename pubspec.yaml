@@ -1,0 +1,23 @@
+name: cross_platform_video_thumbnails
+description: A cross-platform Flutter package for generating video thumbnails that supports Android, iOS, Web, Windows, macOS, and Linux with WASM compatibility.
+version: 0.0.2
+homepage: https://github.com/Dhia-Bechattaoui/cross_platform_video_thumbnails
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  universal_io: ^2.0.0
+  meta: ^1.0.0
+  web: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  # No flutter-specific dependencies needed for this package
