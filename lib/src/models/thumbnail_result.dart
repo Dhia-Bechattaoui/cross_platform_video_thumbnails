@@ -20,6 +20,15 @@ class ThumbnailResult {
   /// The file size in bytes
   final int size;
 
+  /// Creates a new [ThumbnailResult] instance.
+  ///
+  /// All parameters are required:
+  /// - [data]: The raw image data as bytes
+  /// - [width]: The actual width of the generated thumbnail
+  /// - [height]: The actual height of the generated thumbnail
+  /// - [format]: The output format of the thumbnail
+  /// - [timePosition]: The time position used for generation
+  /// - [size]: The file size in bytes
   const ThumbnailResult({
     required this.data,
     required this.width,

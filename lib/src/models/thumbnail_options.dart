@@ -18,6 +18,15 @@ class ThumbnailOptions {
   /// Whether to maintain aspect ratio
   final bool maintainAspectRatio;
 
+  /// Creates a new [ThumbnailOptions] instance.
+  ///
+  /// [timePosition] is required and specifies the time in seconds where the thumbnail
+  /// should be generated from the video.
+  ///
+  /// [width] and [height] default to 320x240 pixels if not specified.
+  /// [quality] defaults to 0.8 (80%) if not specified.
+  /// [format] defaults to [ThumbnailFormat.jpeg] if not specified.
+  /// [maintainAspectRatio] defaults to true if not specified.
   const ThumbnailOptions({
     required this.timePosition,
     this.width = 320,

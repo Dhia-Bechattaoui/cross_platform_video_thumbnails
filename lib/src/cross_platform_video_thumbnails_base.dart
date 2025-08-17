@@ -1,10 +1,30 @@
 import 'dart:async';
 import 'platforms/platform_interface.dart';
+import 'platforms/platform_detection.dart';
 import 'models/thumbnail_options.dart';
 import 'models/thumbnail_result.dart';
 import 'exceptions/thumbnail_exception.dart';
 
-/// Main class for cross-platform video thumbnail generation
+/// Main class for cross-platform video thumbnail generation.
+///
+/// This class provides a unified API for generating video thumbnails across
+/// all supported platforms (Android, iOS, Web, Windows, macOS, Linux).
+///
+/// The class uses static methods and automatically detects and initializes
+/// the appropriate platform-specific implementation.
+///
+/// ## Usage
+///
+/// ```dart
+/// // Initialize the package
+/// await CrossPlatformVideoThumbnails.initialize();
+///
+/// // Generate a thumbnail
+/// final thumbnail = await CrossPlatformVideoThumbnails.generateThumbnail(
+///   videoPath,
+///   ThumbnailOptions(timePosition: 5.0),
+/// );
+/// ```
 class CrossPlatformVideoThumbnails {
   static PlatformInterface? _platform;
   static bool _initialized = false;
@@ -82,27 +102,9 @@ class CrossPlatformVideoThumbnails {
 
   /// Get the platform-specific implementation based on the current platform
   static Future<PlatformInterface> _getPlatformImplementation() async {
-    // Import the platform detection module
-    // This will be resolved at compile time based on the target platform
     try {
-      // For now, we'll use a simple approach
-      // In a real implementation, you would use the conditional imports from platform_detection.dart
-
-      // Check if we're on web
-      if (identical(0, 0.0)) {
-        // This is a simple way to detect web vs native
-        // In practice, you'd use proper platform detection
-        throw UnimplementedError('Web platform not yet implemented');
-      }
-
-      // Check if we're on mobile
-      if (identical(0, 0.0)) {
-        // Mobile platform detection
-        throw UnimplementedError('Mobile platform not yet implemented');
-      }
-
-      // Default to desktop
-      throw UnimplementedError('Desktop platform not yet implemented');
+      // Use the platform detection module to get the appropriate implementation
+      return getPlatformImplementation();
     } catch (e) {
       throw ThumbnailException(
         'Failed to get platform implementation: $e',
