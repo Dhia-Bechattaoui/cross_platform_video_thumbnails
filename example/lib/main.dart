@@ -1,5 +1,7 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:cross_platform_video_thumbnails/cross_platform_video_thumbnails.dart';
+import 'package:file_picker/file_picker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,10 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cross Platform Video Thumbnails Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
       home: const ThumbnailGeneratorPage(),
     );
   }
@@ -33,6 +32,7 @@ class _ThumbnailGeneratorPageState extends State<ThumbnailGeneratorPage> {
   bool _isGenerating = false;
   String _status = 'Not initialized';
   List<ThumbnailResult> _thumbnails = [];
+  String? _selectedVideoPath;
 
   @override
   void initState() {
@@ -64,8 +64,25 @@ class _ThumbnailGeneratorPageState extends State<ThumbnailGeneratorPage> {
     }
   }
 
+  Future<void> _pickVideo() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.video);
+
+    if (result != null && result.files.single.path != null) {
+      setState(() {
+        _selectedVideoPath = result.files.single.path!;
+        _status = 'Video selected: ${result.files.single.name}';
+      });
+    }
+  }
+
   Future<void> _generateThumbnail() async {
     if (!_isInitialized) return;
+    if (_selectedVideoPath == null) {
+      setState(() {
+        _status = 'Please select a video file first';
+      });
+      return;
+    }
 
     try {
       setState(() {
@@ -73,9 +90,8 @@ class _ThumbnailGeneratorPageState extends State<ThumbnailGeneratorPage> {
         _status = 'Generating thumbnail...';
       });
 
-      // Generate a sample thumbnail (using a placeholder video path)
       final thumbnail = await CrossPlatformVideoThumbnails.generateThumbnail(
-        'sample_video.mp4', // This would be a real video path in practice
+        _selectedVideoPath!,
         const ThumbnailOptions(
           timePosition: 5.0,
           width: 320,
@@ -102,6 +118,12 @@ class _ThumbnailGeneratorPageState extends State<ThumbnailGeneratorPage> {
 
   Future<void> _generateMultipleThumbnails() async {
     if (!_isInitialized) return;
+    if (_selectedVideoPath == null) {
+      setState(() {
+        _status = 'Please select a video file first';
+      });
+      return;
+    }
 
     try {
       setState(() {
@@ -110,7 +132,7 @@ class _ThumbnailGeneratorPageState extends State<ThumbnailGeneratorPage> {
       });
 
       final thumbnails = await CrossPlatformVideoThumbnails.generateThumbnails(
-        'sample_video.mp4',
+        _selectedVideoPath!,
         [
           const ThumbnailOptions(
             timePosition: 0.0,
@@ -203,25 +225,68 @@ class _ThumbnailGeneratorPageState extends State<ThumbnailGeneratorPage> {
               ),
             ),
             const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: _isInitialized ? _pickVideo : null,
+              icon: const Icon(Icons.video_library),
+              label: const Text('Select Video File'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+              ),
+            ),
+            if (_selectedVideoPath != null) ...[
+              const SizedBox(height: 8),
+              Card(
+                color: Colors.green.shade50,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.check_circle, color: Colors.green),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Video: ${_selectedVideoPath!.split('/').last}',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+            const SizedBox(height: 16),
             Row(
               children: [
-                ElevatedButton(
-                  onPressed: _isInitialized && !_isGenerating
-                      ? _generateThumbnail
-                      : null,
-                  child: const Text('Generate Single'),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed:
+                        _isInitialized &&
+                            !_isGenerating &&
+                            _selectedVideoPath != null
+                        ? _generateThumbnail
+                        : null,
+                    child: const Text('Generate Single'),
+                  ),
                 ),
                 const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: _isInitialized && !_isGenerating
-                      ? _generateMultipleThumbnails
-                      : null,
-                  child: const Text('Generate Multiple'),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed:
+                        _isInitialized &&
+                            !_isGenerating &&
+                            _selectedVideoPath != null
+                        ? _generateMultipleThumbnails
+                        : null,
+                    child: const Text('Generate Multiple'),
+                  ),
                 ),
                 const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: _thumbnails.isNotEmpty ? _clearThumbnails : null,
-                  child: const Text('Clear'),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _thumbnails.isNotEmpty ? _clearThumbnails : null,
+                    child: const Text('Clear'),
+                  ),
                 ),
               ],
             ),
@@ -238,17 +303,68 @@ class _ThumbnailGeneratorPageState extends State<ThumbnailGeneratorPage> {
                   itemBuilder: (context, index) {
                     final thumbnail = _thumbnails[index];
                     return Card(
-                      child: ListTile(
-                        title: Text('Thumbnail ${index + 1}'),
-                        subtitle: Text(
-                          '${thumbnail.width}x${thumbnail.height} '
-                          '${thumbnail.format.name.toUpperCase()} '
-                          '(${thumbnail.size} bytes) '
-                          'at ${thumbnail.timePosition}s',
-                        ),
-                        trailing: Icon(
-                          _getFormatIcon(thumbnail.format),
-                          color: _getFormatColor(thumbnail.format),
+                      margin: const EdgeInsets.only(bottom: 8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  _getFormatIcon(thumbnail.format),
+                                  color: _getFormatColor(thumbnail.format),
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Thumbnail ${index + 1}',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            // Display the thumbnail image
+                            Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.memory(
+                                  Uint8List.fromList(thumbnail.data),
+                                  width: double.infinity,
+                                  height: 200,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      width: double.infinity,
+                                      height: 200,
+                                      color: Colors.grey[300],
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.error_outline,
+                                          color: Colors.red,
+                                          size: 48,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // Display metadata
+                            Text(
+                              'Size: ${thumbnail.width}x${thumbnail.height}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            Text(
+                              'Format: ${thumbnail.format.name.toUpperCase()} | '
+                              'Size: ${_formatBytes(thumbnail.size)} | '
+                              'Time: ${thumbnail.timePosition.toStringAsFixed(1)}s',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -281,6 +397,16 @@ class _ThumbnailGeneratorPageState extends State<ThumbnailGeneratorPage> {
         return Colors.green;
       case ThumbnailFormat.webp:
         return Colors.orange;
+    }
+  }
+
+  String _formatBytes(int bytes) {
+    if (bytes < 1024) {
+      return '$bytes B';
+    } else if (bytes < 1024 * 1024) {
+      return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    } else {
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
     }
   }
 }

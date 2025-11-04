@@ -2,6 +2,8 @@
 
 A cross-platform Flutter package for generating video thumbnails that supports Android, iOS, Web, Windows, macOS, and Linux with WASM compatibility.
 
+<img src="example.gif" width="300">
+
 ## Features
 
 - **Cross-Platform Support**: Works on all 6 major platforms
@@ -29,7 +31,8 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  cross_platform_video_thumbnails: ^0.0.2
+  cross_platform_video_thumbnails: ^0.1.0
+```
 
 ## Usage
 
@@ -89,7 +92,7 @@ final thumbnails = await CrossPlatformVideoThumbnails.generateThumbnails(
 );
 
 // Check platform capabilities
-final supportedFormats = CrossPlatformVideoThideoThumbnails.getSupportedVideoFormats();
+final supportedFormats = CrossPlatformVideoThumbnails.getSupportedVideoFormats();
 final supportedOutputs = CrossPlatformVideoThumbnails.getSupportedOutputFormats();
 
 // Verify video format support

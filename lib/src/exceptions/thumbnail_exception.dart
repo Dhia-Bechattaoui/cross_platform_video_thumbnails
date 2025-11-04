@@ -14,11 +14,7 @@ class ThumbnailException implements Exception {
   /// [message] is required and should describe what went wrong.
   /// [error] is optional and can contain the underlying error object.
   /// [stackTrace] is optional and can contain the stack trace for debugging.
-  const ThumbnailException(
-    this.message, [
-    this.error,
-    this.stackTrace,
-  ]);
+  const ThumbnailException(this.message, [this.error, this.stackTrace]);
 
   @override
   String toString() {

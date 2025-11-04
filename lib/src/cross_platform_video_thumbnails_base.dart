@@ -73,7 +73,8 @@ class CrossPlatformVideoThumbnails {
   static List<String> getSupportedVideoFormats() {
     if (!_initialized) {
       throw const ThumbnailException(
-          'Platform not initialized. Call initialize() first.');
+        'Platform not initialized. Call initialize() first.',
+      );
     }
     return _platform!.getSupportedVideoFormats();
   }
@@ -82,7 +83,8 @@ class CrossPlatformVideoThumbnails {
   static List<ThumbnailFormat> getSupportedOutputFormats() {
     if (!_initialized) {
       throw const ThumbnailException(
-          'Platform not initialized. Call initialize() first.');
+        'Platform not initialized. Call initialize() first.',
+      );
     }
     return _platform!.getSupportedOutputFormats();
   }
@@ -106,10 +108,7 @@ class CrossPlatformVideoThumbnails {
       // Use the platform detection module to get the appropriate implementation
       return getPlatformImplementation();
     } catch (e) {
-      throw ThumbnailException(
-        'Failed to get platform implementation: $e',
-        e,
-      );
+      throw ThumbnailException('Failed to get platform implementation: $e', e);
     }
   }
 }

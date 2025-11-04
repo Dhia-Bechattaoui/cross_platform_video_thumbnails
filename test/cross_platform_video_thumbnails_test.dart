@@ -116,12 +116,18 @@ void main() {
     });
 
     test('should get ThumbnailFormat from string', () {
-      expect(ThumbnailFormat.values.firstWhere((f) => f.name == 'jpeg'),
-          ThumbnailFormat.jpeg);
-      expect(ThumbnailFormat.values.firstWhere((f) => f.name == 'png'),
-          ThumbnailFormat.png);
-      expect(ThumbnailFormat.values.firstWhere((f) => f.name == 'webp'),
-          ThumbnailFormat.webp);
+      expect(
+        ThumbnailFormat.values.firstWhere((f) => f.name == 'jpeg'),
+        ThumbnailFormat.jpeg,
+      );
+      expect(
+        ThumbnailFormat.values.firstWhere((f) => f.name == 'png'),
+        ThumbnailFormat.png,
+      );
+      expect(
+        ThumbnailFormat.values.firstWhere((f) => f.name == 'webp'),
+        ThumbnailFormat.webp,
+      );
     });
 
     test('should throw exception when not initialized', () {
@@ -145,8 +151,10 @@ void main() {
       } catch (e) {
         expect(e, isA<ThumbnailException>());
         if (e is ThumbnailException) {
-          expect(e.message,
-              contains('Failed to initialize platform implementation'));
+          expect(
+            e.message,
+            contains('Failed to initialize platform implementation'),
+          );
         }
       }
     });
