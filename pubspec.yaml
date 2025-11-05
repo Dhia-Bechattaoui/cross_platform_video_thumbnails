@@ -1,6 +1,6 @@
 name: cross_platform_video_thumbnails
 description: A cross-platform Flutter package for generating video thumbnails that supports Android, iOS, Web, Windows, macOS, and Linux with WASM compatibility.
-version: 0.1.0
+version: 0.1.1
 homepage: https://github.com/Dhia-Bechattaoui/cross_platform_video_thumbnails
 repository: https://github.com/Dhia-Bechattaoui/cross_platform_video_thumbnails
 funding:

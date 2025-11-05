@@ -2,7 +2,7 @@
 
 A cross-platform Flutter package for generating video thumbnails that supports Android, iOS, Web, Windows, macOS, and Linux with WASM compatibility.
 
-<img src="example.gif" width="300">
+<img src="assets/example.gif" width="300">
 
 ## Features
 
